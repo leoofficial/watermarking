@@ -33,7 +33,6 @@ def embed_watermark(host, watermark, robustness):
     luma = host[:, :, 0]
     luma = luma.astype(np.float)
     watermark = cv.resize(watermark, (width >> 1, height >> 2))
-    watermark = cv.GaussianBlur(watermark, (7, 7), 0)
     watermark = cv.adaptiveThreshold(watermark, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 11, 2)
     watermark, pxl_perm_mat = utils.pseudo_random_permute(watermark)
     luma = utils.dct(luma)
@@ -85,6 +84,6 @@ def extract(host, key):
     pxl_perm_mat = key['pxl_perm_mat']
     watermark = extract_watermark(host, pxl_perm_mat)
     watermark = watermark.astype(np.uint8)
-    watermark = cv.medianBlur(watermark, 7)
+    watermark = cv.medianBlur(watermark, 5)
     watermark = cv.resize(watermark, (width, height))
     return watermark
