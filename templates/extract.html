@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Unique</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+
+        <div class="row">
+            <div class="col text-center">
+                <img id="logo" src="/assets/images/logo.jpg" alt="" style="width: 10%; height: auto">
+                <h1>UNIQUE</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <h2><small>A Copyright Infringement Protection Platform Based on Digital Watermarking</small></h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center"> 
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mx-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/embed">Embed</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="/extract">Extract</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-md-6">
+                <form id="form card" runat="server">
+                    <div class="form-group card-body">
+                        <label for="host" class="card-title"><b>Step 1:</b> Upload the Picture with Watermark</label>
+                        <input type='file' id="host">
+                        <img id="host-preview" src="" alt="" style="width: 100%; height: auto;">
+                    </div>
+                    <div class="form-group card-body">
+                        <label for="key" class="card-title"><b>Step 2:</b> Upload the key</label>
+                        <br>
+                        <input type='file' id="key">
+                    </div>
+                    <div class="form-group card-body">
+                        <label for="extract" class="card-title"><b>Step 3:</b> Extract</label>
+                        <label id="extract" class="btn btn-secondary btn-block">Extract</label>
+                    </div>
+                </form>
+            </div>
+            <div class="col"></div>
+        </div>
+        <div class="row" id="processing" style="display: none;">
+            <div class="col"></div>
+            <div class="col-md-6">
+                <div class="alert alert-info" role="alert">
+                    Processing
+                </div>
+            </div>
+            <div class="col"></div>
+        </div>
+        <div class="row" id="success" style="display: none;">
+            <div class="col"></div>
+            <div class="col-md-6">
+                <div class="alert alert-success" role="alert">
+                    Extracted watermark
+                </div>
+                <img id="watermark" src="" style="width: 100%; height: auto;" alt="">
+            </div>
+            <div class="col"></div>
+        </div>
+        <div class="row" id="fail" style="display: none;">
+            <div class="col"></div>
+            <div class="col-md-6">
+                <div class="alert alert-danger" role="alert">
+                    Fail
+                </div>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+            function readURL(input, id) {
+                let reader = new FileReader();
+                reader.onload = ev =>$(id).attr('src', ev.target.result);
+                reader.readAsDataURL(input.files[0]);
+            }
+
+            $("#host").change(function () {
+                readURL(this, '#host-preview');
+            });
+            $("#watermark").change(function () {
+                readURL(this, '#watermark-preview');
+            });
+            $('#extract').on('click', function (ev) {
+                let formData = new FormData();
+                let host = $('#host')[0].files;
+                let key = $('#key')[0].files;
+                formData.append("host", host[0], host[0].name);
+                formData.append("key", key[0], key[0].name);
+                $('#success').hide();
+                $('#fail').hide();
+                $('#processing').show();
+                $.ajax({
+                    url: '/extract',
+                    type: 'POST',
+                    data: formData,
+                    success: function (res){
+                        $('#processing').hide();
+                        if(res['status'] === 'fail') {
+                            $('#fail').show();
+                        } else {
+                            $('#success').show();
+                            $('#watermark').attr('src', res['watermark']);
+                        }
+                    },
+                    processData: false,
+                    contentType: false,
+                });
+            });
+        });
+    </script>
+</body>
+</html>
