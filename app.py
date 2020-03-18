@@ -1,9 +1,10 @@
 import os
 import random
+
 import cv2
 import numpy as np
+from flask import Flask, json, render_template, request, send_from_directory
 
-from flask import Flask, json, render_template, send_from_directory, request
 import watermark as wm
 
 app = Flask(__name__)
