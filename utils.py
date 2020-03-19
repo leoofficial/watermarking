@@ -2,14 +2,6 @@ import cv2 as cv
 import numpy as np
 
 
-class SimilarImageException(Exception):
-    pass
-
-
-class UnmatchedKeyException(Exception):
-    pass
-
-
 def pad(image):
     height, width = image.shape[0: 2]
     return np.pad(image, ((0, 8 - height & 7), (0, 8 - width & 7), (0, 0)), 'constant')
