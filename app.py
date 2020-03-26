@@ -1,7 +1,7 @@
 import os
 import random
 
-import cv2
+import cv2 as cv
 import numpy as np
 from flask import Flask, json, render_template, request, send_from_directory
 
@@ -49,13 +49,13 @@ def embed():
         watermark_path = os.path.join('static', 'images', 'watermark') + random_idx
         key_path = os.path.join('static', 'keys', 'key') + random_idx
         host.save(host_path)
-        host = cv2.imread(host_path)
+        host = cv.imread(host_path)
         watermark.save(watermark_path)
-        watermark = cv2.imread(watermark_path, 0)
+        watermark = cv.imread(watermark_path, 0)
         host, key = wm.embed(host, watermark, robustness)
         host_path = host_path + '.jpg'
         key_path = key_path + '.npz'
-        cv2.imwrite(host_path, host)
+        cv.imwrite(host_path, host)
         np.savez(key_path, id=random_idx, shape=key['shape'], pxl_perm_mat=key['pxl_perm_mat'])
         return json.jsonify({
             'status': 'success',
@@ -89,12 +89,12 @@ def extract():
         watermark_path = os.path.join('static', 'images', 'watermark')
         key_path = os.path.join('static', 'keys', 'key.npy')
         host.save(host_path)
-        host = cv2.imread(host_path)
+        host = cv.imread(host_path)
         key.save(key_path)
         key = np.load(key_path)
         watermark = wm.extract(host, key)
         watermark_path = watermark_path + '.jpg'
-        cv2.imwrite(watermark_path, watermark)
+        cv.imwrite(watermark_path, watermark)
         return json.jsonify({
             'status': 'success',
             'watermark': watermark_path
