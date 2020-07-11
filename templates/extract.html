@@ -117,7 +117,7 @@
                     url: '/extract',
                     type: 'POST',
                     data: formData,
-                    success: function (res){
+                    success: res => {
                         $('#processing').hide();
                         if(res['status'] === 'fail') {
                             $('#fail').show();
