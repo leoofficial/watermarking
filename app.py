@@ -14,8 +14,8 @@ def clear_files(func):
     def wrapper():
         for image in os.listdir(os.path.join('static', 'images')):
             os.remove(os.path.join('static', 'images', image))
-        for image in os.listdir(os.path.join('static', 'keys')):
-            os.remove(os.path.join('static', 'keys', image))
+        for key in os.listdir(os.path.join('static', 'keys')):
+            os.remove(os.path.join('static', 'keys', key))
         res = func()
         return res
     wrapper.__name__ = func.__name__
