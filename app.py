@@ -24,10 +24,10 @@ def clear_files(func):
 
 @app.route('/')
 def home_page():
-    if not os.path.exists(os.path.join('static', 'keys')):
+    if not os.path.exists(os.path.join('static', 'images')):
         os.makedirs(os.path.join('static', 'images'))
     if not os.path.exists(os.path.join('static', 'keys')):
-        os.makedirs(os.path.join('static', 'images'))
+        os.makedirs(os.path.join('static', 'keys'))
     return render_template('index.html')
 
 
